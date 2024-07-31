@@ -68,4 +68,11 @@ Our conclusion is that our model does not work very well. With the exception of 
 ## Model 2 (TODO)
 
 # CONCLUSION (TODO)
+- Opinions:
+  - What went well and what didn't, etc
+  - Maybe a discussion of the dataset itself?
+  - it should be rather difficult to predict hazards (especially health/environmental hazards) as this information is not explicitly stored in the chemical itself but rather in the interactions between the chemical and other biomolecules
+- Future directions:
+  - Building one model per hazard, trying out NLP strategies on the data, etc
+
 # STATEMENT OF COLLABORATION (TODO)
