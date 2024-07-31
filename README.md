@@ -205,7 +205,7 @@ Since the cost of false negatives (failing to report a hazard) is high, our targ
 
 For toxic, health, and environmental hazards, these results are reasonable. It should be rather difficult to predict health / environmental hazards as this information is not explicitly stored in the chemical itself but rather in the interactions between the chemical and other biomolecules it may interact with. However, we are not sure why corrosive compounds performed poorly, since we had a decently robust set of training data for these classes, and it should be fairly evident in the bonds of the molecule.
 
-In conclusion, our model predicts 5 out of the 9 classes well but is far from perfect. We should've validated our data further using cross validation. Another improvement might be to build one model per hazard, which might lead to better performance by allowing each model to specialize in detecting specific hazards. Finally, further data augmentation and hyperparameter tuning could improve the recall for the poorly performing classes.
+In conclusion, our model predicts 5 out of the 9 classes well but is far from perfect. We could've validated our data further using cross validation. Another improvement might be to build one model per hazard, which might lead to better performance by allowing each model to specialize in detecting specific hazards. Finally, further data augmentation and hyperparameter tuning could improve the recall for the poorly performing classes.
 
 # CONCLUSION
 
