@@ -5,19 +5,19 @@ Through the course of the investigation, we discovered that our model’s abilit
 
 # METHODS
 ## Pre-Processing
-Notebook link: [milestones.ipynb](url)
+Notebook link: [milestones.ipynb](https://github.com/duomei98/chemical-hazards/blob/Milestone4/milestones.ipynb)
 
 Data preprocessing first required splitting the safety dataset into multiple XML files, as the raw file was too large to parse directly. Then the necessary chemical hazard and SMILES data was extracted. First, we removed all encoding errors, then we parsed the XML files to extract GHS hazard codes and CIDs associated with each chemical, which we saved in a TSV file. The CIDs were then used to obtain the SMILES data from PubChem, which were then saved in a separate TSV file. 
 
 To combine the datasets, the GHS hazard codes were first converted to a one-hot encoding based on the corresponding pictogram(s), then merged with SMILES data along the CIDs. This resulted in an organized pandas DataFram indicating a chemical's SMILES string and a binary hazard indicator for each hazard.
 
 ## Data Exploration
-Notebook link: [milestones.ipynb](url)
+Notebook link: [milestones.ipynb](https://github.com/duomei98/chemical-hazards/blob/Milestone4/milestones.ipynb)
 
 When exploring the data, we first checked our data for null values, then analyzed the count distribution of our hazard class features. Next, we investigated the correlation between the hazard classes using a heatmap. Finally, we enhanced our data by adding a SMILEs token length attribute. 
 
 ## Model 1
-Notebook link: [models.ipynb](url)
+Notebook link: [models.ipynb](https://github.com/duomei98/chemical-hazards/blob/Milestone4/models.ipynb)
 
 Our first model is a multilabel logistic regression model. We additionally further preprocessed our input by tokenizing the SMILES strings using the regex-based basic SMILES tokenizer from deepchem. Then, we evaluated our data for each class, focusing on the recall metric. 
 ```
@@ -46,7 +46,7 @@ Figure 1: Logistic regression framework for GHS Hazard classification
 ![Model 1 flowchart; ML](https://github.com/user-attachments/assets/86f2ac9c-2291-45cb-959d-a58f9370b5bc)
 
 ## Model 2
-Notebook link: [model_final_(1).ipynb](url)
+Notebook link: [model_final_(1).ipynb](https://github.com/duomei98/chemical-hazards/blob/Milestone4/model_final_(1).ipynb)
 
 Our second model is a Convolutional Neural network. We preprocessed our input: first pruning observations with SMILES strings of length greater than 100, then augmenting our data, generating alternative SMILES strings for the hazard classes 'explosive', 'oxidizer', and 'pressurized' using the SMILES randomizer from the SMILES-enumeration library. 
 ```
