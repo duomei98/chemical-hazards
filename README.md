@@ -1,20 +1,20 @@
 # INTRODUCTION
-In brainstorming ideas for our project, we focused on topics that we found were both interesting and practical. We settled on the idea of using the structure of chemicals to predict what hazards were associated with it; it fulfilled these criteria, and datasets on this topic were readily available. Since a chemical's properties are largely tied to its molecular structure and the bonds between its constituent elements, we were curious to see if a model could successfully predict GHS (Globally Harmonized System) hazard class given a chemical's SMILES (Simplified Molecular Input Line Entry System) string, as well as its charge and type (if applicable). 
+In brainstorming ideas for our project, we focused on topics that we found were both interesting and practical. We settled on the idea of using the structure of chemicals to predict what hazards were associated with it; it fulfilled these criteria, and datasets on this topic were readily available. Since a chemical's properties are largely tied to its molecular structure constituent elements, we were curious to see if a model could successfully predict a chemical's associated GHS (Globally Harmonized System) hazard pictograms given its SMILES (Simplified Molecular Input Line Entry System) string. 
 
-Through the course of our investigation, we discovered that our model’s ability to predict certain hazards is related not only to the chemical's properties but also the nature of the hazard. Analyzing these relationships was very fun and rewarding, and we believe with some key improvements, our model can be used in laboratory settings in safety protocol and chemical handling.
+Through the course of the investigation, we discovered that our model’s ability to predict certain hazards is related not only to the chemical's properties but also the nature of the hazard. Analyzing these relationships was very fun and rewarding, and we believe with some key improvements, our model can be used in laboratory settings in safety protocol and chemical handling.
 
 # METHODS
 ## Pre-Processing
 Notebook link: [milestones.ipynb](url)
 
-Data preprocessing first required splitting the data into multiple XML files. We then took several steps to clean and extract the necessary chemical hazard and SMILES data. We parsed the XML files to extract GHS hazard class with their associated CID, which we saved in a TSV file. Similarly, we extracted SMILES data with associated CIDs, and saved it in a separate TSV file. 
+Data preprocessing first required splitting the safety dataset into multiple XML files, as the raw file was too large to parse directly. Then the necessary chemical hazard and SMILES data was extracted. First, we removed all encoding errors, then we parsed the XML files to extract GHS hazard codes and CIDs associated with each chemical, which we saved in a TSV file. The CIDs were then used to obtain the SMILES data from PubChem, which were then saved in a separate TSV file. 
 
-To combine the datasets we first converted GHS classes to a one-hot encoding based on hazard class, then merged it with SMILES data based on CID, dropping the original GHS classes. This resulted in an organized data-frame indicating a chemical's SMILES string and a binary hazard indicator for each hazard.
+To combine the datasets, the GHS hazard codes were first converted to a one-hot encoding based on the corresponding pictogram(s), then merged with SMILES data along the CIDs. This resulted in an organized pandas DataFram indicating a chemical's SMILES string and a binary hazard indicator for each hazard.
 
 ## Data Exploration
 Notebook link: [milestones.ipynb](url)
 
-When exploring our data, we first checked our data for null values, then analyzed the count distribution of our hazard class features. Next, we investigated the correlation between the hazard classes using a heatmap. Finally, we enhanced our data by adding a SMILEs string length attribute. 
+When exploring the data, we first checked our data for null values, then analyzed the count distribution of our hazard class features. Next, we investigated the correlation between the hazard classes using a heatmap. Finally, we enhanced our data by adding a SMILEs token length attribute. 
 
 ## Model 1
 Notebook link: [models.ipynb](url)
@@ -171,14 +171,14 @@ Figure 9: Recall Bar Chart
 
 # DISCUSSION
 ## Pre-Processing
-Given the incredibly large size of database we were drawing from, we needed to carefully prune our data. First, we discarded all non-hazardous compounds, which were irrelevant to our goal. For the remaining compounds, the most important features to extract were CID (Compound Identifier), SMILES string, and associated GHS hazard codes. Since there are around 70 GHS hazard codes listed on PubChem, we decided to sort them into their hazard class, of which there are 9 in total. This approach avoids overcomplicating our model while still retaining the important information. 
+Given the incredibly large size of database we were drawing from, we needed to carefully select our data. For the remaining compounds, the most important features to extract were CID (Compound Identifier), SMILES string, and associated GHS hazard codes. Since there are around 70 GHS hazard codes, we decided to sort them into their hazard pictograms, of which there are 9 in total. This approach avoids overcomplicating our model while still retaining the important information. 
 
 For the same reason, we discarded all text and image-based data. We considered including numerical attributes such as boiling or melting point, but ultimately decided against it to narrow the scope of our project. Including more attributes might improve the predictive ability of our model, so there is area for improvement here. However, given the scale of our dataset, we opted to prioritize simplicity and speed. 
 
 ## Data Exploration
-After pre-processing our data into a dataframe with SMILES string and one-hot encoded GHS Hazard classes as features, we wanted to examine our data for patterns. First, we looked at the counts distribution for each Hazard class and found that irritants made up about 65% of all data, while the classes 'explosive', 'oxidizer', and 'pressurized' summed to less than 1%. This was not unexpected, given that irritants are much more common than explosives, oxidizers, and pressurized compounds. 
+After pre-processing our data into a dataframe with SMILES string and one-hot encoded GHS Hazard classes as features, we wanted to examine our data for patterns. First, we looked at the counts distribution for each Hazard label and found that 85% of all compounds were labeled 'irritant', while the the labels 'explosive', 'oxidizer', and 'pressurized' summed to less than 1%. This was not unexpected, given that irritants are much more common than explosives, oxidizers, and pressurized compounds. 
 
-However, this class imbalance was very problematic when it came time to build our models. In hindsight, it might've been smarter to deal with this challenge at this stage of our project. We could've oversampled the minority classes or randomly removed some of the irritant samples so that our data was more balanced.
+However, this imbalance was very problematic when it came time to build our models. In hindsight, it might've been smarter to deal with this challenge at this stage of our project. We could've oversampled the minority classes or randomly removed some of the solely irritant samples so that our data was more balanced.
 
 Finally, we generated a correlation heatmap for the GHS Hazard classes. It showed low correlation between all class features, meaning that hazards are largely independent of each other. Based on this correlation, we determined that we did not need to prune any features.
 
@@ -191,7 +191,7 @@ Our conclusion is that our model does not work very well. With the exception of 
 
 ## Model 2 
 
-When pre-processing our data for a neural network, we decided to remove all SMILES strings with length greater than 100, which represented around 3% of our total data, for the sake of simplifying our model. Since these strings were outliers in our dataset, removing them should not significantly affect the predictive ability of our model.
+When pre-processing our data for a neural network, we decided to remove all SMILES strings with length greater than 100, which represented around 3% of our total data, for the sake of reducing the size of the input, as all inputs would need to be padded up to the size of the largest input. Since these strings were outliers in our dataset, removing them should not significantly affect the predictive ability of our model. Additionally, a cutoff of 100 tokens is roughly equivalent to the size of a small molecule (1 kDa), which corresponds to the size of most molecules one would encounter in the lab.
 
 Given the issues we encountered in Model 1 with imbalanced classes, we needed to balance our data in some way. We tackled this issue by augmenting our data using SmilesEnumerator, which generates all possible SMILES forms of a molecule. For the classes in which we had the fewest observations (explosive, oxidizer, and pressurized), we added alternate SMILES into our dataset to balance our classes. These strings are alternate forms of compounds present in those classes. 
 
@@ -203,7 +203,7 @@ Using these insights, we built our final model, and retrained it with a larger e
 
 Since the cost of false negatives (failing to report a hazard) is high, our target metric was recall. Across all 9 labels, explosive, oxidizer, and irritant had the highest recall, of around 94%, with flammable and pressurized performing decently well at around 70-80%. We had the most robust data for irritants, and our model appeared to train well on our augmented SMILES strings in the clases explosive, oxidizer, and pressurized. However, the recall for corrosive, toxic, health hazard, and environmental hazard were all below 50%. 
 
-For health and environmental hazards, these results are reasonable. It should be rather difficult to predict health / environmental hazards as this information is not explicitly stored in the chemical itself but rather in the interactions between the chemical and other biomolecules. However, we are not sure why corrosive and toxic compounds performed poorly, since we had a decently robust set of training data for these classes.
+For toxic, health, and environmental hazards, these results are reasonable. It should be rather difficult to predict health / environmental hazards as this information is not explicitly stored in the chemical itself but rather in the interactions between the chemical and other biomolecules it may interact with. However, we are not sure why corrosive compounds performed poorly, since we had a decently robust set of training data for these classes, and it should be fairly evident in the bonds of the molecule.
 
 In conclusion, our model predicts 5 out of the 9 classes well but is far from perfect. We should've validated our data further using cross validation. Another improvement might be to build one model per hazard, which might lead to better performance by allowing each model to specialize in detecting specific hazards. Finally, further data augmentation and hyperparameter tuning could improve the recall for the poorly performing classes.
 
@@ -211,9 +211,9 @@ In conclusion, our model predicts 5 out of the 9 classes well but is far from pe
 
 We think the idea of using molecular structure in the form of SMILES strings to predict chemical hazards is really cool, and we're glad we chose to explore this topic. Though the process of building our models was challenging, we greatly enjoyed assessing the relationships between hazards and evaluating our models' predictive performance. 
 
-For instance, our model struggled to predict health and environmental hazards, but this makes sense since these hazards are more related to chemical handling and storage rather than any intrinsic property of the compound. However, it is concerning that our model does not predict corrosives well, despite the fact that they are the second most common hazard on PubChem. This suggest that corrosives are probably common in practical settings, and thus it is very important to correctly identify this hazard.
+For instance, our model struggled to predict health and environmental hazards, but this makes sense since these hazards are more related to chemical handling and storage rather than any intrinsic property of the compound. However, it is concerning that our model does not predict corrosives well, despite the fact that they are the second most common hazard on PubChem. This suggest that corrosives are probably common in practical settings, and thus it is very important to correctly identify this hazard, which we have not done effectively thus far.
 
-If we were to redo our project, we would probably try to augment the underperforming classes further, which turned out to be our main obstacle. We would also avoid wasting time with a Logistic Regression model, which performed very poorly, and used that time to perfect our neural network. Given more time, we would like to incorporate cross-validation and further hyperparameter tuning to improve our model's validity and performance.
+If we were to redo our project, we would probably try to augment the underperforming classes further, which turned out to be our main obstacle. We would also avoid trying Logistic Regression model, which performed very poorly, and used that time to perfect our neural network. Given more time, we would like to incorporate cross-validation and further hyperparameter tuning to improve our model's validity and performance.
 
 We are excited about possibly improving our model in the future since there are many different avenues we can take. We can try building separate CNNs per hazard, trying out NLP strategies on our data, or using transformer models or other advanced architectures. Our group had a lot of fun working together on this project, and while our final model is far from perfect, we learned a lot through the process.
 
