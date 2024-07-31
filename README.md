@@ -221,3 +221,5 @@ We are excited about possibly improving our model in the future since there are 
 Anna He. Contributed ideas and input during team meetings. Coded most of the data exploration portion. Wrote the Milestone 2 submission and wrote the final write-up
 
 Yuehua Xie: coded most of the data preprocessing + augmentation portion + our final model. Wrote the Milestone 3 submission.
+
+Varun Durai: Coded Model 1 along wiith relevant data preprocessing. Conducted model exploration for Model 2. Provided input during meetings
