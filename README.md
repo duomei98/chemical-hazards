@@ -219,3 +219,5 @@ We are excited about possibly improving our model in the future since there are 
 
 # STATEMENT OF COLLABORATION
 Anna He. Contributed ideas and input during team meetings. Coded most of the data exploration portion. Wrote the Milestone 2 submission and wrote the final write-up
+
+Yuehua Xie: coded most of the data preprocessing + augmentation portion + our final model. Wrote the Milestone 3 submission.
